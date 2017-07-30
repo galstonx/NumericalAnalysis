@@ -7,35 +7,12 @@ namespace NumericalAnalysis {
 
   */
   template<typename T>
-  void VectorField<T>::eval(const Point<T>& x,Point<T>& rv) const {
+  VectorField<T>::VectorField(dim_type dim,VF_FunctionPointer<T> vf) : AbstractVectorField<T>(dim), vf(vf) {
+  }
+
+  template<typename T>
+  void VectorField<T>::operator()(const Point<T>& x,Point<T>& rv) const {
     vf(x,rv);
-  }
-
-  template<typename T>
-  void VectorField<T>::d_eval(const Point<T>& x,const Point<T>& dx,Point<T>& rv) const {
-    d_vf(x,dx,rv);
-  }
-
-  template<typename T>
-  int VectorField<T>::inv_d_eval(const Point<T>& x,Point<T>& dx,const Point<T>& rv) const {
-    inv_d_vf(x,dx,rv);
-    return 0;
-  }
-  
-  template<typename T>
-  VectorField<T>::VectorField(unsigned long long d,void (*f)(const Point<T>&,Point<T>&)) {
-    vf=f;
-    dim=d;
-  }
-
-  template<typename T>
-  void VectorField<T>::set_d_vf(void (*df)(const Point<T>&,const Point<T>&,Point<T>&)) {
-    d_vf=df;
-  }
-
-  template<typename T>
-  void VectorField<T>::set_inv_d_vf(void (*df)(const Point<T>&,Point<T>&,const Point<T>&)) {
-    inv_d_vf=df;
   }
 
   /*

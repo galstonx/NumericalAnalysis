@@ -1,36 +1,44 @@
-#ifndef __FUNCTIONS_HPP
-#define __FUNCTIONS_HPP
+#ifndef FUNCTIONS_HPP
+#define FUNCTIONS_HPP
 
-
+#include "../Sizes.hpp"
 #include "Point.hpp"
 
 namespace NumericalAnalysis {
 
   // typedefs for function pointers
   template<typename T>
-  using VectorFieldRaw=void(*)(const Point<T>&,Point<T>&);
+  using VF_FunctionPointer=void(*const)(const Point<T>& x,Point<T>& rv);
   
   
+  // abstract class for vector fields
+  // T is the number type
+  template<typename T>
+  class AbstractVectorField {
+  public:
+    virtual void operator() (const Point<T>& x,Point<T>& rv) const=0;
+  protected:
+    AbstractVectorField(dim_type dim) : dim(dim) {}
+    const dim_type dim;
+  };
+
+  template<typename T>
+  class AbstractVectorFieldNonAut {
+  public:
+    virtual void operator() (const T& t,const Point<T>& x,Point<T>& rv) const=0;
+  protected:
+    dim_type dim;
+  };
 
   // autonomous vector field
   // T is the number type
   template<typename T>
-  class VectorField {
-  private:
-    void (*vf)(const Point<T>&,Point<T>&);
-    void (*d_vf)(const Point<T>&,const Point<T>&,Point<T>&);
-    void (*inv_d_vf)(const Point<T>&,Point<T>&,const Point<T>&);
-    bool is_diff;
-    unsigned long long dim;
-  protected:
-    VectorField() {};
+  class VectorField : public AbstractVectorField<T> {
   public:
-    VectorField(unsigned long long,void(*)(const Point<T>&,Point<T>&));
-    void set_d_vf(void (*)(const Point<T>&,const Point<T>&,Point<T>&));
-    void set_inv_d_vf(void (*)(const Point<T>&,Point<T>&,const Point<T>&));
-    void eval(const Point<T>&,Point<T>&) const;
-    void d_eval(const Point<T>&,const Point<T>&,Point<T>&) const;
-    int inv_d_eval(const Point<T>&,Point<T>&,const Point<T>&) const;
+    VectorField(dim_type dim,VF_FunctionPointer<T> vf);
+    void operator() (const Point<T>& x,Point<T>& rv) const;
+  private:
+    VF_FunctionPointer<T> vf;
   };
  
   // nonautonomous vector field

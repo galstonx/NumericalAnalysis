@@ -25,12 +25,13 @@ int main() {
   cout << v[2] << endl;
 
   // test VectorField
+  cout << endl << "Test VectorField (expected output=-4)" << endl;
   VectorField<double> vf(2,exp_vf);
   Point<double> p(1);
   p[0]=-4;
   Point<double> rv(1);
-  vf.eval(p,rv);
-  cout<< rv[0]<<endl;
+  vf(p,rv);
+  cout<< rv[0] <<endl;
 
   //test RealFunction
   cout<<endl<<"Test RealFunction"<<endl;
