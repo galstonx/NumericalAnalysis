@@ -6,6 +6,12 @@
 
 namespace NumericalAnalysis {
 
+  // typedefs for function pointers
+  template<typename T>
+  using VectorFieldRaw=void(*)(const Point<T>&,Point<T>&);
+  
+  
+
   // autonomous vector field
   // T is the number type
   template<typename T>
