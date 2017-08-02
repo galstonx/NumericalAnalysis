@@ -93,19 +93,6 @@ int main() {
   cout << E << endl;
 
   // try solving some equations
-  Matrix<double> F(2,3);
-  F.set(0,0,1);
-  F.set(0,1,2);
-  F.set(1,0,3);
-  F.set(1,1,4);
-  F.set(0,2,10);
-  F.set(1,2,20);
-  Point<double> ans(2);
-  cout << F << endl;
-  GaussBackSolve(F,ans);
-  cout<< "ans=" << ans[0] << " " << ans[1] << endl;
-
-  // try solving some equations
   Matrix<double> G(2,4);
   G.set(0,0,1);
   G.set(0,1,2);
