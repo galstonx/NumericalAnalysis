@@ -12,7 +12,7 @@
 
 
 #include "./RootFinders/EnclosureMethods.hpp"
-//#include "./RootFinders/LinearMethods.hpp"
+#include "./RootFinders/LinearMethods.hpp"
 #include "./RootFinders/IterationMethods.hpp"
 
 #include "./ODESolvers/SimpleODEMethods.hpp"
