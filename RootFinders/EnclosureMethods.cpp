@@ -8,41 +8,28 @@ namespace NumericalAnalysis {
 
 
 
-  template<typename T>
-  RootFinder<T>::RootFinder(const RealFunction1d<T>* f) : rf(f), VALUE_TOL_DEF(.000001), MAX_STEPS_DEF(100) {
-    max_steps=MAX_STEPS_DEF;
-    value_tol=VALUE_TOL_DEF;
-  }
-
-
-  template<typename T>
-  BisectionMethod<T>::BisectionMethod(const RealFunction1d<T>* f) : RootFinder<T>(f) {
-  }
 
 
 
   template<typename T>
-  int BisectionMethod<T>::solve(T left,T right, T& root) {
+  void BisectionMethod<T>::solve(T left,T right, T& root) {
     // needed for two-phase lookup
     T value_tol=RootFinder<T>::value_tol;
     long long max_steps=RootFinder<T>::max_steps;
-    const RealFunction1d<T>* rf=RootFinder<T>::rf;
-
-    int rv=0;
     long long counter=0;
     bool done=false;
-    T& mid=root;
-    T a=left;
-    T b=right;
+    Point<T> a(1,left);
+    Point<T> b(1,right);
+    Point<T> mid(1);
     T rf_left;
     T rf_mid;
     T rf_right;
     while(! done) {
       counter++;
-      mid=(a+b)/2;
-      rf->eval(a,rf_left);
-      rf->eval(b,rf_right);
-      rf->eval(mid,rf_mid);
+      mid[0]=(a[0]+b[0])/2;
+      (*this->rf)(a,rf_left);
+      (*this->rf)(b,rf_right);
+      (*this->rf)(mid,rf_mid);
       if( (abs(rf_mid)<value_tol) || (counter>max_steps) ) {
 	done=true;
       }
@@ -50,54 +37,41 @@ namespace NumericalAnalysis {
 	// midpoint is negative
 	if(rf_mid<0) {
 	  if(rf_left<0) {
-	    a=mid;
+	    a[0]=mid[0];
 	  }
 	  else {
-	    b=mid;
+	    b[0]=mid[0];
 	  }
 	}
 	// midpoint is positive
 	else {
 	  if(rf_left>0) {
-	    a=mid;
+	    a[0]=mid[0];
 	  }
 	  else {
-	    b=mid;
+	    b[0]=mid[0];
 	  }
 	}
 
       }
     }
-    rv=1;
-  }
-
-
-  template<typename T>
-  FalsePositionMethod<T>::FalsePositionMethod(RealFunction1d<T>& f) : RootFinder<T>(f) {
-    use_root_tol=false;
-    use_value_tol=true;
-  }
-
-  template<typename T>
-  FalsePositionMethod<T>::FalsePositionMethod(RealFunction1d<T>& f,T rt) : RootFinder<T>(f) {
-    use_root_tol=true;
-    use_value_tol=false;
-    root_tol=rt;
+    root=mid[0];
   }
 
 
 
+
   template<typename T>
-  int FalsePositionMethod<T>::solve(T left,T right, T& root) {
+  void FalsePositionMethod<T>::solve(T left,T right, T& root) {
     // needed for two-phase lookup
     T value_tol=RootFinder<T>::value_tol;
     long long max_steps=RootFinder<T>::max_steps;
-    RealFunction1d<T>* rf=RootFinder<T>::rf;
-    int rv=0;
+    const AbstractRealFunction<T>* rf=RootFinder<T>::rf; // actually is a RealFunction1d
     long long counter=0;
     bool done=false;
-    T a=left;
-    T b=right;
+    Point<T> a(1,left);
+    Point<T> b(1,right);
+    Point<T> root_pt(1,root);
     T tmp1;
     T tmp2;
     T rf_left;
@@ -108,29 +82,33 @@ namespace NumericalAnalysis {
     while(! done) {
       counter++;
       // main logic for finding next point is here
-      rf->eval(a,rf_left);
-      rf->eval(b,rf_right);
+      (*rf)(a,rf_left);
+      (*rf)(b,rf_right);
       tmp2=tmp1;
       tmp1=root;
-      root=b-rf_right*(b-a)/(rf_right-rf_left);
-      rf->eval(root,rf_root);
+      root=b[0]-rf_right*(b[0]-a[0])/(rf_right-rf_left);
+      (*rf)(root,rf_root);
       // update endpoints
       // root is negative
       if(rf_root<0) {
 	if(rf_left<0) {
-	  a=root;
+	  a[0]=root;
+	  root_pt[0]=root;
 	}
 	else {
-	  b=root;
+	  b[0]=root;
+	  root_pt[0]=root;
 	}
       }
       // root is positive
       else {
 	if(rf_left>0) {
-	  a=root;
+	  a[0]=root;
+	  root_pt[0]=root;
 	}
 	else {
-	  b=root;
+	  b[0]=root;
+	  root_pt[0]=root;
 	}
       }
       // check if we are done
@@ -150,7 +128,6 @@ namespace NumericalAnalysis {
 	}
       }
     }
-    rv=1;
   }
 
 

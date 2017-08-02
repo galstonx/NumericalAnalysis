@@ -1,5 +1,5 @@
-#ifndef __LINEAR_ALGEBRA_HPP
-#define __LINEAR_ALGEBRA_HPP
+#ifndef LINEAR_ALGEBRA_HPP
+#define LINEAR_ALGEBRA_HPP
 
 #include <vector>
 #include "../Containers/Point.hpp"

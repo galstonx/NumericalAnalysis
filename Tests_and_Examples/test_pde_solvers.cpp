@@ -48,8 +48,8 @@ void g_bc4(const Point<double>& x,double& rv) {
 int main() {
 
   cout << "Test PoissonBasicMethod2d" << endl;
-  RealFunction<double> f(f_nonhomog4);
-  RealFunction<double> g(g_bc4);
+  RealFunction<double> f(2,f_nonhomog4);
+  RealFunction<double> g(2,g_bc4);
   double x_min=-1;
   double x_max=1;
   double x_steps=50;
